@@ -1,0 +1,85 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gdo-mobile-apk
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build GDO-MT Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout mobile repository
+        uses: actions/checkout@v4
+
+      - name: Checkout GDO source and embedded data
+        uses: actions/checkout@v4
+        with:
+          repository: redatest/GDO
+          ref: main
+          path: source
+
+      - name: Prepare Flutter application
+        run: |
+          flutter create --platforms=android --org dz.sonelgaz --project-name gdo_mt_mobile build_app
+          mkdir -p build_app/assets/gdo/assets
+          cp source/index.html build_app/assets/gdo/index.html
+          cp -R source/assets/. build_app/assets/gdo/assets/
+          cp -R source/src build_app/assets/gdo/src
+          cp pubspec.yaml build_app/pubspec.yaml
+          mkdir -p build_app/lib
+          cp lib/main.dart build_app/lib/main.dart
+
+      - name: Configure Android local HTTP access
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("build_app/android/app/src/main/AndroidManifest.xml")
+          s = p.read_text()
+          if "android.permission.INTERNET" not in s:
+              s = s.replace("<manifest", '<manifest\n    xmlns:android="http://schemas.android.com/apk/res/android"', 1) if 'xmlns:android=' not in s else s
+              s = s.replace("<application", '    <uses-permission android:name="android.permission.INTERNET"/>\n    <application', 1)
+          if "android:usesCleartextTraffic" not in s:
+              s = s.replace("<application", '<application android:usesCleartextTraffic="true"', 1)
+          p.write_text(s)
+          PY
+
+      - name: Resolve Flutter dependencies
+        working-directory: build_app
+        run: flutter pub get
+
+      - name: Build release APK
+        working-directory: build_app
+        run: flutter build apk --release
+
+      - name: Stage APK
+        run: |
+          mkdir -p dist
+          cp build_app/build/app/outputs/flutter-apk/app-release.apk dist/GDO-MT.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GDO-MT-Android-APK
+          path: dist/GDO-MT.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish latest APK release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: mobile-build-${{ github.run_number }}
+          name: GDO-MT Android — build ${{ github.run_number }}
+          body: |
+            APK Android autonome de GDO-MT.
+            Données réseau embarquées depuis redatest/GDO au moment de la compilation.
+          files: dist/GDO-MT.apk
+          make_latest: true
