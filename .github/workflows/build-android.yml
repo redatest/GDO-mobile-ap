@@ -3,6 +3,8 @@ name: Build Android APK
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - README.md
   workflow_dispatch:
 
 permissions:
@@ -88,3 +90,38 @@ jobs:
             Données réseau embarquées depuis redatest/GDO au moment de la compilation.
           files: dist/GDO-MT.apk
           make_latest: true
+
+      - name: Update README with the published APK version
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          build = os.environ["BUILD_NUMBER"]
+          url = f"https://github.com/redatest/GDO-mobile-ap/releases/download/mobile-build-{build}/GDO-MT.apk"
+          path = Path("README.md")
+          content = path.read_text(encoding="utf-8")
+          content = re.sub(
+              r"\\[\\*\\*Télécharger l'APK Android — GDO-MT(?: \(build \d+\))?\\*\\*\\]\\([^)]*\\)",
+              f"[**Télécharger l'APK Android — GDO-MT (build {build})**]({url})",
+              content,
+              count=1,
+          )
+          content = re.sub(
+              r"> Version publiée : build \\d+\\.",
+              f"> Version publiée : build {build}. Ce lien est automatiquement actualisé après chaque nouvelle compilation réussie.",
+              content,
+              count=1,
+          )
+          path.write_text(content, encoding="utf-8")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if ! git diff --cached --quiet; then
+            git commit -m "Update README APK link for build ${BUILD_NUMBER}"
+            git push
+          fi
