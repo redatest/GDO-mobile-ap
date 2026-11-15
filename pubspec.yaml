@@ -1,0 +1,23 @@
+name: gdo_mt_mobile
+description: Application Android hors ligne GDO-MT.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  webview_flutter: ^4.10.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/gdo/
+    - assets/gdo/assets/
+    - assets/gdo/src/
+    - assets/gdo/src/config/
+    - assets/gdo/src/data/
+    - assets/gdo/src/utils/
+    - assets/gdo/src/views/
