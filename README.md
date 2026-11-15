@@ -4,9 +4,9 @@ Application Android hors ligne de gestion des ouvrages Moyenne Tension, basée s
 
 ## Téléchargement
 
-[**Télécharger l'APK Android — GDO-MT**](https://github.com/redatest/GDO-mobile-ap/releases/latest/download/GDO-MT.apk)
+[**Télécharger l'APK Android — GDO-MT (build 3)**](https://github.com/redatest/GDO-mobile-ap/releases/download/mobile-build-3/GDO-MT.apk)
 
-> Le lien sera actif après la première compilation et publication automatique par GitHub Actions.
+> Version publiée : build 3. Ce lien est automatiquement actualisé après chaque nouvelle compilation réussie.
 
 ## Fonctionnement
 
@@ -19,7 +19,7 @@ Application Android hors ligne de gestion des ouvrages Moyenne Tension, basée s
 
 ## Compilation
 
-Le workflow GitHub Actions récupère le dépôt source `redatest/GDO`, embarque les fichiers nécessaires, compile l'APK Android en mode release et publie l'artefact dans une release GitHub.
+Le workflow GitHub Actions récupère le dépôt source `redatest/GDO`, embarque les fichiers nécessaires, compile l'APK Android en mode release et publie l'artefact dans une release GitHub. Après publication, il met automatiquement à jour le lien de téléchargement et le numéro de build dans ce README.
 
 Pour lancer manuellement le workflow : **Actions → Build Android APK → Run workflow**.
 
