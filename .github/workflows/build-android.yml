@@ -105,14 +105,20 @@ jobs:
           path = Path("README.md")
           content = path.read_text(encoding="utf-8")
           content = re.sub(
-              r"\\[\\*\\*Télécharger l'APK Android — GDO-MT(?: \(build \d+\))?\\*\\*\\]\\([^)]*\\)",
-              f"[**Télécharger l'APK Android — GDO-MT (build {build})**]({url})",
+              r"releases/download/mobile-build-\\d+/GDO-MT\\.apk",
+              f"releases/download/mobile-build-{build}/GDO-MT.apk",
               content,
               count=1,
           )
           content = re.sub(
-              r"> Version publiée : build \\d+\\.",
-              f"> Version publiée : build {build}. Ce lien est automatiquement actualisé après chaque nouvelle compilation réussie.",
+              r"GDO-MT \\(build \\d+\\)",
+              f"GDO-MT (build {build})",
+              content,
+              count=1,
+          )
+          content = re.sub(
+              r"Version publiée : build \\d+\\.",
+              f"Version publiée : build {build}. Ce lien est automatiquement actualisé après chaque nouvelle compilation réussie.",
               content,
               count=1,
           )
