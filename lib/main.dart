@@ -102,7 +102,7 @@ class _GdoHomePageState extends State<GdoHomePage> {
     try {
       var path = Uri.decodeComponent(request.uri.path);
       if (path.isEmpty || path == '/') path = '/index.html';
-      if (path.contains('..') || path.contains('\\')) {
+      if (path.contains('..') || path.contains('\\\\')) {
         response.statusCode = HttpStatus.badRequest;
         await response.close();
         return;
@@ -110,10 +110,14 @@ class _GdoHomePageState extends State<GdoHomePage> {
 
       final assetPath = 'assets/gdo${path}';
       final data = await rootBundle.load(assetPath);
-      response.headers
-        ..set(HttpHeaders.contentTypeHeader, _contentType(path))
-        ..set(HttpHeaders.cacheControlHeader, 'no-cache')
-        ..set('X-Content-Type-Options', 'nosniff');
+
+      // HttpHeaders.contentType attend un objet ContentType.
+      // Headers.set(), lui, attend une valeur texte : lui passer ContentType
+      // déclenche "unexpected type for header name content-type".
+      response.headers.contentType = _contentType(path);
+      response.headers.set(HttpHeaders.cacheControlHeader, 'no-cache');
+      response.headers.set('X-Content-Type-Options', 'nosniff');
+
       response.add(data.buffer.asUint8List(
         data.offsetInBytes,
         data.lengthInBytes,
