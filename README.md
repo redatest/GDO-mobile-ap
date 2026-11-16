@@ -4,9 +4,9 @@ Application Android hors ligne de gestion des ouvrages Moyenne Tension, basée s
 
 ## Téléchargement
 
-[**Télécharger l'APK Android — GDO-MT (build 7)**](https://github.com/redatest/GDO-mobile-ap/releases/download/mobile-build-7/GDO-MT.apk)
+[**Télécharger l'APK Android — GDO-MT (build 8)**](https://github.com/redatest/GDO-mobile-ap/releases/download/mobile-build-8/GDO-MT.apk)
 
-> Version publiée : build 7. Ce lien est automatiquement actualisé après chaque nouvelle compilation réussie. Ce lien est automatiquement actualisé après chaque nouvelle compilation réussie.
+> Version publiée : build 8. Ce lien est automatiquement actualisé après chaque nouvelle compilation réussie. Ce lien est automatiquement actualisé après chaque nouvelle compilation réussie. Ce lien est automatiquement actualisé après chaque nouvelle compilation réussie.
 
 ## Fonctionnement
 
