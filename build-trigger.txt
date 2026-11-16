@@ -1,1 +1,1 @@
-Reconstruction Android déclenchée pour intégrer la navigation mobile en bas et supprimer le badge MT 30kV.
+Reconstruction Android déclenchée pour intégrer la fermeture de l’avertissement topologique du schéma.
